@@ -1,13 +1,13 @@
 const main = document.querySelector("main");
 
 const newTodoItemButton = document.createElement("button");
+
 newTodoItemButton.textContent = "New Todo";
 
-document.addEventListener("DOMContentLoaded", function() {
  main.appendChild(newTodoItemButton);
-});
 
 const newTodoItemDialog = document.createElement("dialog");
+
 newTodoItemDialog.innerHTML =  `
   <h2>Todo Details</h2>
   <form>
@@ -20,9 +20,7 @@ newTodoItemDialog.innerHTML =  `
   </form>
   `;
 
-document.addEventListener("DOMContentLoaded", function() {
-  main.appendChild(newTodoItemDialog);
-});
+main.appendChild(newTodoItemDialog);
 
 newTodoItemButton.addEventListener("click", function() {
   newTodoItemDialog.show();
