@@ -26,10 +26,25 @@ newTodoItemButton.addEventListener("click", function() {
   newTodoItemDialog.show();
 })
 
+let defaultTodoList;
+
+if(localStorage.getItem("defaultTodoList")) {
+  defaultTodoList = JSON.parse(localStorage.getItem("defaultTodoList"));
+  console.log("Found");
+}
+else {
+  defaultTodoList = [];
+  console.log("Not Found")
+  console.log(defaultTodoList);
+}
+
+console.log(defaultTodoList);
+
 const title = document.getElementById("title");
 const description = document.getElementById("description");
 const dueDate = document.getElementById("dueDate");
 const priority = document.getElementById("priority");
+
 const btnSubmitTodoItem = document.getElementById("submit-todo-item");
 const btnCloseNewTodoItemDialog = document.getElementById("close-dialog");
 
@@ -40,16 +55,16 @@ btnSubmitTodoItem.addEventListener("click", function(e) {
   const dueDateValue = dueDate.value;
   const priorityValue = priority.value;
   addTodoItem(titleValue, descriptionValue, dueDateValue, priorityValue);
+  newTodoItemDialog.close();
+  updateDOM();
 });
-
-let defaultTodoList = [];
-
-localStorage.setItem("defaultTodoList", JSON.stringify(defaultTodoList));
 
 function addTodoItem(title, description, dueDate, priority) {
   const newTodoItem = new TodoItem(title, description, dueDate, priority);
-  defaultTodoList = JSON.parse(localStorage.getItem("defaultTodoList"));
+  console.log(newTodoItem);
+  console.log(defaultTodoList);
   defaultTodoList.push(newTodoItem);
+  console.log(defaultTodoList);
   localStorage.setItem("defaultTodoList", JSON.stringify(defaultTodoList));
 };
 
@@ -61,3 +76,24 @@ class TodoItem {
     this.priority = priority;
   }
 };
+
+const listDisplay = document.createElement("section");
+
+main.appendChild(listDisplay);
+
+function updateDOM() {
+  if(defaultTodoList.length >= 1) {
+    defaultTodoList.map(item => {
+      listDisplay.innerHTML += `
+        <div>
+          <p>Title: ${item.title}</p>
+          <p>Description: ${item.description}</p>
+          <p>Due Date: ${item.dueDate}</p>
+          <p>Priority: ${item.priority}</p>
+        </div>
+      `;
+    });
+  };
+}
+
+updateDOM();
