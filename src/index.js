@@ -97,3 +97,8 @@ function updateDOM() {
 }
 
 updateDOM();
+
+btnCloseNewTodoItemDialog.addEventListener("click", function(e) {
+  e.preventDefault();
+  newTodoItemDialog.close();
+});
