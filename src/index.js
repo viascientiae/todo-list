@@ -1,13 +1,10 @@
 const main = document.querySelector("main");
 
 const newTodoItemButton = document.createElement("button");
-
 newTodoItemButton.textContent = "New Todo";
-
 main.appendChild(newTodoItemButton);
 
 const newTodoItemDialog = document.createElement("dialog");
-
 newTodoItemDialog.innerHTML =  `
   <h2>Todo Details</h2>
   <form>
@@ -15,57 +12,73 @@ newTodoItemDialog.innerHTML =  `
     <label for="description">Description: <input type="text" name="description" id="description"></label>
     <label for="dueDate">Due Date: <input type="date" name="dueDate" id="dueDate"></label>
     <label for="priority">Priority: <input type="number" name="priority" id="priority"></label>
+    <label for="list">List: <input type="text" name="list" id="list"></label>
     <button id="submit-todo-item">Submit</button>
     <button id="close-dialog">Close</button>
   </form>
   `;
-
 main.appendChild(newTodoItemDialog);
-
 newTodoItemButton.addEventListener("click", function() {
   newTodoItemDialog.show();
 })
 
-let defaultTodoList;
-
-if(localStorage.getItem("defaultTodoList")) {
-  defaultTodoList = JSON.parse(localStorage.getItem("defaultTodoList"));
-  console.log("Found");
+let toDoLists;
+if(localStorage.getItem("toDoLists")) {
+  toDoLists = JSON.parse(localStorage.getItem("toDoLists"));
+  console.log("toDoLists found in localStorage");
+  console.log(toDoLists);
 }
 else {
-  defaultTodoList = [];
-  console.log("Not Found")
-  console.log(defaultTodoList);
+  toDoLists = [
+                {
+                  name: "default",
+                  items: [],
+                }
+              ];
+  localStorage.setItem("toDoLists", JSON.stringify(toDoLists));
+  console.log("toDoLists created and stored in localStorage");
+  console.log(JSON.parse(localStorage.getItem("toDoLists")));
 }
-
-console.log(defaultTodoList);
+console.log(toDoLists);
 
 const title = document.getElementById("title");
 const description = document.getElementById("description");
 const dueDate = document.getElementById("dueDate");
 const priority = document.getElementById("priority");
-
+const list = document.getElementById("list");
 const btnSubmitTodoItem = document.getElementById("submit-todo-item");
 const btnCloseNewTodoItemDialog = document.getElementById("close-dialog");
-
 btnSubmitTodoItem.addEventListener("click", function(e) {
   e.preventDefault();
   const titleValue = title.value;
   const descriptionValue = description.value;
   const dueDateValue = dueDate.value;
   const priorityValue = priority.value;
-  addTodoItem(titleValue, descriptionValue, dueDateValue, priorityValue);
+  const listValue = list.value;
+  addTodoItem(titleValue, descriptionValue, dueDateValue, priorityValue, listValue);
   newTodoItemDialog.close();
   updateDOM();
 });
+btnCloseNewTodoItemDialog.addEventListener("click", function(e) {
+  e.preventDefault();
+  newTodoItemDialog.close();
+});
 
-function addTodoItem(title, description, dueDate, priority) {
+function addTodoItem(title, description, dueDate, priority, list) {
   const newTodoItem = new TodoItem(title, description, dueDate, priority);
+  let listName = list.toLowerCase();
   console.log(newTodoItem);
-  console.log(defaultTodoList);
-  defaultTodoList.push(newTodoItem);
-  console.log(defaultTodoList);
-  localStorage.setItem("defaultTodoList", JSON.stringify(defaultTodoList));
+  console.log(listName);
+  let listFound = toDoLists.find(list => list.name === listName);
+  console.log(listFound);
+  if (listFound) {
+    listFound.items.push(newTodoItem);
+  }
+  else {
+    toDoLists.push({name: listName, items: [newTodoItem]});
+  }
+  localStorage.setItem("toDoLists", JSON.stringify(toDoLists));
+  console.log(JSON.parse(localStorage.getItem("toDoLists")));
 };
 
 class TodoItem {
@@ -78,12 +91,9 @@ class TodoItem {
 };
 
 const listDisplay = document.createElement("section");
-
 main.appendChild(listDisplay);
-
 function updateDOM() {
-  if(defaultTodoList.length >= 1) {
-    defaultTodoList.map(item => {
+    toDoLists[0].items.map(item => {
       listDisplay.innerHTML += `
         <div>
           <p>Title: ${item.title}</p>
@@ -93,12 +103,5 @@ function updateDOM() {
         </div>
       `;
     });
-  };
 }
-
 updateDOM();
-
-btnCloseNewTodoItemDialog.addEventListener("click", function(e) {
-  e.preventDefault();
-  newTodoItemDialog.close();
-});
