@@ -90,9 +90,25 @@ class TodoItem {
   }
 };
 
+const selectToDoListContainer = document.createElement("section");
+selectToDoListContainer.innerHTML += `
+  <label for="selectToDoList">Choose a ToDo List to Display</label>
+    <select name="selectTodoList" id="select-todo-list">
+  </select>
+  `;
+main.appendChild(selectToDoListContainer);
+const selectToDoList = document.getElementById("select-todo-list");
+
 const listDisplay = document.createElement("section");
 main.appendChild(listDisplay);
 function updateDOM() {
+    selectToDoList.innerHTML = "";
+    toDoLists.map(list => {
+      selectToDoList.innerHTML += `
+         <option value="${list.name}">${list.name}</option>
+        `;
+    })
+    listDisplay.innerHTML = "";
     toDoLists[0].items.map(item => {
       listDisplay.innerHTML += `
         <div>
