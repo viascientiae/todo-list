@@ -97,19 +97,22 @@ selectToDoListContainer.innerHTML += `
   </select>
   `;
 main.appendChild(selectToDoListContainer);
+
 const selectToDoList = document.getElementById("select-todo-list");
 
 const listDisplay = document.createElement("section");
 main.appendChild(listDisplay);
-function updateDOM() {
+function updateDOM(toDoListName) {
     selectToDoList.innerHTML = "";
     toDoLists.map(list => {
       selectToDoList.innerHTML += `
          <option value="${list.name}">${list.name}</option>
         `;
     })
+    selectToDoList.value = toDoListName;
     listDisplay.innerHTML = "";
-    toDoLists[0].items.map(item => {
+    let toDoListToDisplay = toDoLists.find(list => list.name === toDoListName);
+    toDoListToDisplay.items.map(item => {
       listDisplay.innerHTML += `
         <div>
           <p>Title: ${item.title}</p>
@@ -120,4 +123,8 @@ function updateDOM() {
       `;
     });
 }
-updateDOM();
+updateDOM("default");
+
+selectToDoList.addEventListener("change", function(e) {
+  updateDOM(e.target.value);
+});
