@@ -1,6 +1,7 @@
 import TodoItem from "./ToDoItem";
+import { loadLists, saveLists } from "./storage";
 
-const main = document.querySelector("main");
+const main  = document.querySelector("main");
 
 const newTodoItemButton = document.createElement("button");
 newTodoItemButton.textContent = "New Todo";
@@ -23,25 +24,6 @@ main.appendChild(newTodoItemDialog);
 newTodoItemButton.addEventListener("click", function() {
   newTodoItemDialog.show();
 })
-
-let toDoLists;
-if(localStorage.getItem("toDoLists")) {
-  toDoLists = JSON.parse(localStorage.getItem("toDoLists"));
-  console.log("toDoLists found in localStorage");
-  console.log(toDoLists);
-}
-else {
-  toDoLists = [
-                {
-                  name: "default",
-                  items: [],
-                }
-              ];
-  localStorage.setItem("toDoLists", JSON.stringify(toDoLists));
-  console.log("toDoLists created and stored in localStorage");
-  console.log(JSON.parse(localStorage.getItem("toDoLists")));
-}
-console.log(toDoLists);
 
 const title = document.getElementById("title");
 const description = document.getElementById("description");
