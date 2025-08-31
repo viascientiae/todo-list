@@ -1,3 +1,5 @@
+import TodoItem from "./ToDoItem";
+
 const main = document.querySelector("main");
 
 const newTodoItemButton = document.createElement("button");
@@ -81,14 +83,7 @@ function addTodoItem(title, description, dueDate, priority, list) {
   console.log(JSON.parse(localStorage.getItem("toDoLists")));
 };
 
-class TodoItem {
-  constructor(title, description, dueDate, priority) {
-    this.title = title;
-    this.description = description;
-    this.dueDate = dueDate;
-    this.priority = priority;
-  }
-};
+
 
 const selectToDoListContainer = document.createElement("section");
 selectToDoListContainer.innerHTML += `
